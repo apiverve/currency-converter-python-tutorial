@@ -1,6 +1,7 @@
 # Currency Converter | APIVerve API Tutorial
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Build](https://img.shields.io/badge/Build-Passing-brightgreen.svg)]()
 [![Python](https://img.shields.io/badge/Python-3.8+-blue)](https://python.org)
 [![APIVerve | Exchange Rate](https://img.shields.io/badge/APIVerve-Exchange_Rate-purple)](https://apiverve.com/marketplace/exchangerate?utm_source=github&utm_medium=tutorial&utm_campaign=currency-converter-python-tutorial)
 
