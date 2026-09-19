@@ -1,188 +1,120 @@
-# Currency Converter | APIVerve API Tutorial
+# Currency Converter | APIVerve Template
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Build](https://img.shields.io/badge/Build-Passing-brightgreen.svg)]()
-[![Python](https://img.shields.io/badge/Python-3.8+-blue)](https://python.org)
-[![APIVerve | Exchange Rate](https://img.shields.io/badge/APIVerve-Exchange_Rate-purple)](https://apiverve.com/marketplace/exchangerate?utm_source=github&utm_medium=tutorial&utm_campaign=currency-converter-python-tutorial)
+[![Python](https://img.shields.io/badge/Python-3.12-3776AB)](requirements.txt) [![Flask](https://img.shields.io/badge/Flask-3-000000)](app.py)
+[![APIVerve | Exchange Rate](https://img.shields.io/badge/APIVerve-Exchange_Rate-purple)](https://apiverve.com/marketplace/exchangerate?utm_source=github&utm_medium=template&utm_campaign=currency-converter-python-tutorial)
 
-A simple Python CLI tool that converts between 150+ currencies in real-time. Perfect for finance apps, e-commerce, or learning API integration with Python.
+Convert an amount between 21 currencies at today’s exchange rate. A web app you can deploy, and a command-line tool.
 
-![Screenshot](https://raw.githubusercontent.com/apiverve/currency-converter-python-tutorial/main/screenshot.jpg)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fapiverve%2Fcurrency-converter-python-tutorial&project-name=currency-converter&repository-name=currency-converter&env=APIVERVE_API_KEY&envDescription=Your%20APIVerve%20API%20key.%20Free%20to%20create%2C%20no%20card%20needed.&envLink=https%3A%2F%2Fdashboard.apiverve.com%2Fsignup%3Fapi%3Dexchangerate%26utm_source%3Dvercel%26utm_medium%3Dtemplate%26utm_campaign%3Dcurrency-converter-python-tutorial)
 
----
-
-### Get Your Free API Key
-
-This tutorial requires an APIVerve API key. **[Sign up free](https://dashboard.apiverve.com?utm_source=github&utm_medium=tutorial&utm_campaign=currency-converter-python-tutorial)** - no credit card required.
+![Currency Converter turning 100 US dollars into euros](https://raw.githubusercontent.com/apiverve/currency-converter-python-tutorial/main/screenshot.png)
 
 ---
 
-## Features
+### Get your free API key
 
-- Convert between 150+ world currencies
-- Real-time exchange rates
-- Interactive CLI mode
-- Command-line arguments for scripting
-- Clean, readable Python code
-- Minimal dependencies (just `requests`)
+This template needs an APIVerve API key. **[Sign up free](https://dashboard.apiverve.com/signup?api=exchangerate&utm_source=github&utm_medium=template&utm_campaign=currency-converter-python-tutorial)**, no credit card required.
 
-## Quick Start
+---
 
-1. **Clone this repository**
+## Deploy in one click
+
+Click **Deploy with Vercel** above. Vercel copies this repo to your GitHub account, asks for your `APIVERVE_API_KEY`, and gives you a live URL about a minute later.
+
+## Run it locally
+
+1. **Clone the repository**
    ```bash
    git clone https://github.com/apiverve/currency-converter-python-tutorial.git
    cd currency-converter-python-tutorial
    ```
 
-2. **Install dependencies**
+2. **Install the dependencies**
    ```bash
+   python -m venv .venv
+   source .venv/bin/activate      # Windows: .venv\Scripts\activate
    pip install -r requirements.txt
    ```
 
 3. **Add your API key**
-
-   Open `converter.py` and replace the placeholder with your API key:
-   ```python
-   API_KEY = 'your-api-key-here'
-   ```
-
-4. **Run the converter**
-
-   Interactive mode:
    ```bash
-   python converter.py
+   cp .env.example .env
    ```
+   Then open `.env` and set `APIVERVE_API_KEY`.
 
-   Or with command-line arguments:
+4. **Start it**
    ```bash
-   python converter.py 100 USD EUR
+   python app.py
    ```
 
-## Usage
+5. **Open** `http://localhost:3000`
 
-### Interactive Mode
+`python app.py` serves the page and the API route together, so you don't need the Vercel CLI.
+
+## Use it from the command line
 
 ```bash
-$ python converter.py
-
-========================================
-  Currency Converter
-  Powered by APIVerve
-========================================
-
-Type 'quit' to exit
-
-Amount to convert: 100
-From currency (e.g., USD): USD
-To currency (e.g., EUR): EUR
-
-========================================
-  100.00 USD
-  = 92.65 EUR
-========================================
-  Exchange Rate: 1 USD = 0.9265 EUR
-```
-
-### Command-Line Mode
-
-```bash
-# Convert 100 USD to EUR
 python converter.py 100 USD EUR
-
-# Convert 50 GBP to JPY
-python converter.py 50 GBP JPY
-
-# Convert 1000 EUR to USD
-python converter.py 1000 EUR USD
 ```
 
-## Project Structure
+Run it with no arguments to be prompted instead. It reads the same `.env` as the web app.
+
+## How it works
+
+1. The page (`public/index.html`) calls `GET /api/rate?from=USD&to=EUR`.
+2. `app.py` checks both are 3-letter currency codes, then calls Exchange Rate. Your API key stays on the server and never reaches the browser.
+3. The page shows the result.
 
 ```
-currency-converter-python-tutorial/
-├── converter.py        # Main converter script
-├── requirements.txt    # Python dependencies
-├── screenshot.jpg      # Preview image
-├── LICENSE             # MIT license
-├── .gitignore          # Git ignore rules
-└── README.md           # This file
+├── app.py             # Flask app: the /api/rate route, which holds your key
+├── apiverve.py        # Shared by app.py and converter.py: the key, the APIVerve call, the rate limit
+├── converter.py       # The command-line version
+├── public/            # The page: index.html, app.js, ui.js, style.css
+├── requirements.txt   # flask, requests
+├── .python-version    # 3.12, for Vercel
+└── .env.example       # Copy to .env and add your key
 ```
 
-## API Reference
+### The API call
 
-**Endpoint:** `GET https://api.apiverve.com/v1/exchangerate`
-
-**Query Parameters:**
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `currency1` | string | Yes | Source currency code (e.g., "USD") |
-| `currency2` | string | Yes | Target currency code (e.g., "EUR") |
-
-**Example Response:**
-
-```json
-{
-  "status": "ok",
-  "error": null,
-  "data": {
-    "currency1": "USD",
-    "currency2": "EUR",
-    "exchangeRate": "0.926480"
-  }
-}
+```python
+res = requests.get(
+    'https://api.apiverve.com/v1/exchangerate',
+    params={'currency1': 'USD', 'currency2': 'EUR'},
+    headers={'x-api-key': os.environ['APIVERVE_API_KEY']},
+)
+data = res.json()['data']
+# data['exchangeRate'], data['lastUpdated']
 ```
 
-## Supported Currencies
+Some response fields are for paid plans and come back empty on the free plan. The page shows whatever it gets and leaves the rest out, so it works on every plan.
 
-The API supports 150+ currencies including:
+## Before you share your URL
 
-| Code | Currency |
-|------|----------|
-| USD | US Dollar |
-| EUR | Euro |
-| GBP | British Pound |
-| JPY | Japanese Yen |
-| CAD | Canadian Dollar |
-| AUD | Australian Dollar |
-| CHF | Swiss Franc |
-| CNY | Chinese Yuan |
-| INR | Indian Rupee |
-| MXN | Mexican Peso |
+Once deployed, anyone who finds your URL can use it on your API key. Each visitor can make 10 requests a minute, which is fine for a demo. The limit is kept in memory, so it isn't shared between serverless instances. For production:
 
-[View full list →](https://apiverve.com/marketplace/exchangerate?utm_source=github&utm_medium=tutorial&utm_campaign=currency-converter-python-tutorial)
+- Put the page behind your own sign-in, or
+- Move the limit to a shared store such as [Upstash Redis](https://upstash.com/), or
+- Call the route only from your own backend.
 
-## Customization Ideas
+## Ideas to extend it
 
-- Add a Flask web interface
-- Cache exchange rates with TTL
-- Add historical rate lookups
-- Create a batch conversion mode
-- Export results to CSV
-- Add currency symbol formatting
+- Show prices in the visitor’s currency on a store
+- Convert expenses in a travel or accounting app
+- Add more currencies: the API accepts any 3-letter code it supports
 
-## Related APIs
+## API reference
 
-Explore more APIs at [APIVerve](https://apiverve.com/marketplace?utm_source=github&utm_medium=tutorial&utm_campaign=currency-converter-python-tutorial):
+- [Exchange Rate](https://apiverve.com/marketplace/exchangerate?utm_source=github&utm_medium=template&utm_campaign=currency-converter-python-tutorial): `GET https://api.apiverve.com/v1/exchangerate?currency1=&currency2=`
+- [Full documentation](https://docs.apiverve.com?utm_source=github&utm_medium=template&utm_campaign=currency-converter-python-tutorial)
 
-- [Currency Converter](https://apiverve.com/marketplace/currencyconverter?utm_source=github&utm_medium=tutorial&utm_campaign=currency-converter-python-tutorial) - Direct currency conversion
-- [Gold Price](https://apiverve.com/marketplace/goldprice?utm_source=github&utm_medium=tutorial&utm_campaign=currency-converter-python-tutorial) - Current gold prices
-- [Silver Price](https://apiverve.com/marketplace/silverprice?utm_source=github&utm_medium=tutorial&utm_campaign=currency-converter-python-tutorial) - Current silver prices
+## Tech stack
 
-## Free Plan Note
-
-This tutorial works with the free APIVerve plan. Some APIs may have:
-- **Locked fields**: Premium response fields return `null` on free plans
-- **Ignored parameters**: Some optional parameters require a paid plan
-
-The API response includes a `premium` object when limitations apply. [Upgrade anytime](https://dashboard.apiverve.com/plans) to unlock all features.
+- **Flask** for the API route, with **requests** to call APIVerve (Python 3.12)
+- Plain HTML, CSS and JavaScript for the page: no framework and no build step
+- Deploys to Vercel as-is: `app.py` becomes a Python function and `public/` is served from the CDN
 
 ## License
 
-MIT - see [LICENSE](LICENSE)
-
-## Links
-
-- [Get API Key](https://dashboard.apiverve.com?utm_source=github&utm_medium=tutorial&utm_campaign=currency-converter-python-tutorial) - Sign up free
-- [APIVerve Marketplace](https://apiverve.com/marketplace?utm_source=github&utm_medium=tutorial&utm_campaign=currency-converter-python-tutorial) - Browse 300+ APIs
-- [Exchange Rate API](https://apiverve.com/marketplace/exchangerate?utm_source=github&utm_medium=tutorial&utm_campaign=currency-converter-python-tutorial) - API details
+MIT. See [LICENSE](LICENSE).
